@@ -1,7 +1,6 @@
 <script lang="ts" setup>
 import { h, onMounted, reactive, ref } from 'vue'
 import { NButton, NDataTable, NInput, NModal, NSelect, NSpace, NSwitch, NTag, useDialog, useMessage } from 'naive-ui'
-import type { CHATMODEL } from './model'
 import { KeyConfig, Status, UserRole, apiModelOptions, userRoleOptions } from './model'
 import { fetchGetKeys, fetchUpdateApiKeyStatus, fetchUpsertApiKey } from '@/api'
 import { t } from '@/locales'
@@ -39,7 +38,7 @@ const columns = [
     key: 'chatModels',
     width: 320,
     render(row: any) {
-      const tags = row.chatModels.map((chatModel: CHATMODEL) => {
+      const tags = row.chatModels.map((chatModel: string) => {
         return h(
           NTag,
           {
@@ -91,6 +90,18 @@ const columns = [
     width: 220,
     render(row: KeyConfig) {
       const actions: any[] = []
+      actions.push(h(
+        NButton,
+        {
+          size: 'small',
+          style: {
+            marginRight: '6px',
+          },
+          type: 'error',
+          onClick: () => handleUpdateApiKeyStatus(row._id as string, Status.Disabled),
+        },
+        { default: () => t('common.delete') },
+      ))
       if (row.status === Status.Normal) {
         actions.push(h(
           NButton,
@@ -103,18 +114,6 @@ const columns = [
             onClick: () => handleEditKey(row),
           },
           { default: () => t('common.edit') },
-        ))
-        actions.push(h(
-          NButton,
-          {
-            size: 'small',
-            style: {
-              marginRight: '6px',
-            },
-            type: 'error',
-            onClick: () => handleUpdateApiKeyStatus(row._id as string, Status.Disabled),
-          },
-          { default: () => t('common.delete') },
         ))
       }
       return actions

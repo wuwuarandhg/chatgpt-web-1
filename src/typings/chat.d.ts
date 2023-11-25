@@ -1,5 +1,4 @@
 declare namespace Chat {
-
   interface Chat {
     uuid?: number
     dateTime: string
@@ -26,6 +25,7 @@ declare namespace Chat {
     all?: boolean
     prompt?: string
     usingContext: boolean
+    chatModel?: string
   }
 
   interface ChatState {
